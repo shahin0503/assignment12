@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose')
-const bcrypt = require('bcrypt')
 const ProjectModel = require('./Project')
+const BlogModel = require('./Blog')
+const CommentModel = require('./Comment')
 
 const userSchema = new Schema({
 	fullName: {
@@ -32,18 +33,11 @@ const userSchema = new Schema({
   timestamps: true,
 })
 
-userSchema.pre('save', function (next) {
-	//Hash the password
-	const salt = bcrypt.genSaltSync(10)
-	const hash = bcrypt.hashSync(this.password, salt)
-	this.password = hash
-
-	next()
-})
-
 userSchema.pre('remove', async function (next) {
   try {
-    await ProjectModel.deleteMany({owner: this._id})    
+    await ProjectModel.deleteMany({owner: this._id})
+		await BlogModel.deleteMany({owner: this._id})
+		await CommentModel.deleteMany({owner: this._id})
     next()
   } catch (error) {
     next(error) 
