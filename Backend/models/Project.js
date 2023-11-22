@@ -6,7 +6,7 @@ const projectSchema = new Schema({
     required: true
   },
   technologies: {
-    type: String,
+    type: [String],
     required: true
   },
   description: {

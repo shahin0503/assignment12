@@ -130,7 +130,7 @@ const userController = {
 		try {
 			const userId = req.params.userId
 			const projects = await ProjectModel.find({owner: userId})
-			return response.json({
+			return res.json({
 				success: true,
 				data: projects,
 				message: 'Projects fetched successfully'
