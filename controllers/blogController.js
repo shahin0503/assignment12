@@ -5,7 +5,10 @@ const blogController = {
 	//Get all blogs from the database
 	getAllBlogs: async (req, res) => {
 		try {
-			const blogs = await BlogModel.find()
+			const blogs = await BlogModel.find().populate({
+				path: 'author',
+				select: 'fullName image email'
+			})
 
 			return res.json({ success: true, data: blogs, message: 'Blogs fetched!' })
 		} catch (error) {
