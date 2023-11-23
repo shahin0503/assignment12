@@ -68,11 +68,6 @@ const userController = {
 			if (email) updates.email = email
 			if (image) updates.image = image
 			if (bio) updates.bio = bio
-			if (password) {
-				const salt = bcrypt.genSaltSync(10)
-				const hash = bcrypt.hashSync(password, salt)
-				updates.password = hash
-			}
 			if (phoneNumber) updates.phoneNumber = phoneNumber
 
 			await user.set(updates).save()

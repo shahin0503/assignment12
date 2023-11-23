@@ -54,7 +54,7 @@ const blogController = {
 
 			return res.json({
 				success: true,
-				data: { ...blog.toObject(), comments },
+				data: { comments },
 				message: 'Blog details fetched'
 			})
 		} catch (error) {
