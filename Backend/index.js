@@ -7,6 +7,7 @@ const BlogRoutes = require('./routes/blogRoutes')
 const CommentRoutes = require('./routes/commentRoutes')
 const ProjectRoutes = require('./routes/projectRoutes')
 const EmailRoutes = require('./routes/emailRoutes')
+const ImageUploadRoutes = require('./routes/imageRoutes')
 require('dotenv').config();
 
 const connect = require('./config/db')
@@ -24,6 +25,7 @@ app.use('/api/blogs', BlogRoutes)
 app.use('/api/comments', CommentRoutes)
 app.use('/api/projects', ProjectRoutes)
 app.use('/api/email', EmailRoutes)
+app.use('/api/images', ImageUploadRoutes)
 
 // Start the server
 app.listen(port, async () => {
