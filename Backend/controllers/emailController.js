@@ -4,11 +4,11 @@ const EmailModel = require('../models/Email')
 const emailController = {
 	send: async (req, res) => {
 		try {
-			const { email, content } = req.body
+			const { email, title, content } = req.body
 
 			await sendEmail(email)
 
-			const newEmail = new EmailModel({ email, content })
+			const newEmail = new EmailModel({ email, title, content })
 			await newEmail.save()
 
 			return res.json({
