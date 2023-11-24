@@ -18,7 +18,7 @@ const userController = {
 				phoneNumber
 			})
 			await newUser.save()
-			const token = jwt.sign({ id: newUser._id }, 'my-jwt-secret')
+			const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET)
 			return res.json({
 				success: true,
 				data: { ...newUser.toObject(), token },
@@ -45,7 +45,7 @@ const userController = {
 					.status(400)
 					.json({ success: false, message: 'Incorrect password!' })
 			}
-			const token = jwt.sign({ id: foundUser._id }, 'my-jwt-secret')
+			const token = jwt.sign({ id: foundUser._id }, process.env.JWT_SECRET)
 			return res.json({ success: true, data: { ...foundUser.toObject(), token } })
 		} catch (error) {
 			return res.status(500).json({ success: false, message: error.message })
