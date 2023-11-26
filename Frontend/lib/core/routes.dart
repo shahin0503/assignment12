@@ -14,6 +14,7 @@ import 'package:assignment12_front_end/presentation/screens/project/project_list
 import 'package:assignment12_front_end/presentation/screens/splash/splash_screen.dart';
 import 'package:assignment12_front_end/presentation/screens/user/edit_profile_screen.dart';
 import 'package:assignment12_front_end/presentation/screens/user/user_details_screen.dart';
+import 'package:assignment12_front_end/presentation/widgets/web_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -72,6 +73,12 @@ class Routes {
         return CupertinoPageRoute(
           builder: (context) => CreateEditProjectScreen(
             projectPreferences: settings.arguments as ProjectPreferences,
+          ),
+        );
+      case WebViewScreen.routeName:
+        return CupertinoPageRoute(
+          builder: (context) => WebViewScreen(
+            initialUri: settings.arguments as String,
           ),
         );
       case ContactFormScreen.routeName:

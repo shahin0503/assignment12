@@ -1,10 +1,14 @@
 import 'package:assignment12_front_end/data/models/project/project_model.dart';
 import 'package:assignment12_front_end/logic/cubits/project_cubit/project_cubit.dart';
 import 'package:assignment12_front_end/presentation/screens/project/create_edit_project_screen.dart';
+import 'package:assignment12_front_end/presentation/widgets/gap_widget.dart';
 import 'package:assignment12_front_end/presentation/widgets/generic_dialog.dart';
+import 'package:assignment12_front_end/presentation/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:assignment12_front_end/core/ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDisplayWidget extends StatelessWidget {
   final List<ProjectModel> projects;
@@ -15,6 +19,15 @@ class ProjectDisplayWidget extends StatelessWidget {
     required this.projects,
     this.choice = false,
   });
+
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +59,8 @@ class ProjectDisplayWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Description:',
-                              style: TextStyles.body2.copyWith(
-                                color: AppColors.accent,
-                              ),
+                              project.description!,
+                              style: TextStyles.body2,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -69,57 +80,103 @@ class ProjectDisplayWidget extends StatelessWidget {
                                       );
                                     },
                                   ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return GenericDialog(
-                                          title: 'Delete Confirmation',
-                                          content:
-                                              'Are you sure you want to delete?',
-                                          onConfirm: () {
-                                            BlocProvider.of<ProjectCubit>(
-                                                    context)
-                                                .deleteProject(
-                                              project.id!,
-                                              project.userId!,
-                                            );
-                                          },
-                                          confirmButtonText: 'Delete',
-                                          cancelButtonText: 'Cancel',
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
+                                if (choice == true)
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return GenericDialog(
+                                            title: 'Delete Confirmation',
+                                            content:
+                                                'Are you sure you want to delete?',
+                                            onConfirm: () {
+                                              BlocProvider.of<ProjectCubit>(
+                                                      context)
+                                                  .deleteProject(
+                                                project.id!,
+                                                project.userId!,
+                                              );
+                                              SnackBarWidget.showSnackbar(
+                                                  context,
+                                                  'Project deleted successfully!');
+                                            },
+                                            confirmButtonText: 'Delete',
+                                            cancelButtonText: 'Cancel',
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                               ],
                             ),
                           ],
                         ),
-                        Text(project.description!),
-                        Text(
-                          'Technologies used:',
-                          style: TextStyles.body2.copyWith(
-                            color: AppColors.accent,
-                          ),
+                        Wrap(
+                          spacing: 8.0,
+                          children: project.technologiesUsed!
+                              .map((technology) => Chip(
+                                    label: Text(
+                                      technology,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 224, 196, 229),
+                                    shape: const StadiumBorder(),
+                                  ))
+                              .toList(),
                         ),
-                        Text(project.technologiesUsed!.join(',')),
-                        Text(
-                          'GitUrl:',
-                          style: TextStyles.body2.copyWith(
-                            color: AppColors.accent,
+                        if (project.gitUrl != null &&
+                            project.gitUrl!.isNotEmpty)
+                          GestureDetector(
+                            onTap: () => _launchURL(project.gitUrl!),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.code),
+                                  const GapWidget(
+                                    size: -10,
+                                  ),
+                                  Text(
+                                    project.gitUrl!,
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                        Text(project.gitUrl!),
-                        Text(
-                          'DemoUrl:',
-                          style: TextStyles.body2.copyWith(
-                            color: AppColors.accent,
+                        if (project.demoUrl != null &&
+                            project.demoUrl!.isNotEmpty)
+                          GestureDetector(
+                            onTap: () => _launchURL(project.demoUrl!),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.public),
+                                  const GapWidget(
+                                    size: -10,
+                                  ),
+                                  Text(
+                                    project.demoUrl!,
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                        Text(project.demoUrl!),
                       ],
                     ),
                   )

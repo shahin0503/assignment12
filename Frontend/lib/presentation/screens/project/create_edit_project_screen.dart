@@ -4,6 +4,7 @@ import 'package:assignment12_front_end/logic/cubits/project_cubit/project_cubit.
 import 'package:assignment12_front_end/presentation/widgets/gap_widget.dart';
 import 'package:assignment12_front_end/presentation/widgets/primary_button.dart';
 import 'package:assignment12_front_end/presentation/widgets/primary_textfield.dart';
+import 'package:assignment12_front_end/presentation/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_tag_editor/tag_editor.dart';
@@ -63,22 +64,26 @@ class _CreateEditProjectScreenState extends State<CreateEditProjectScreen> {
               child: Column(
                 children: [
                   PrimaryTextField(
+                    prefixIcon: const Icon(Icons.title),
                     labelText: 'Title',
                     controller: _titleController,
                   ),
                   const GapWidget(),
                   PrimaryTextField(
+                    prefixIcon: const Icon(Icons.description),
                     labelText: 'Description',
                     controller: _descriptionController,
                   ),
                   const GapWidget(),
                   PrimaryTextField(
-                    labelText: 'GitURL',
+                    prefixIcon: const Icon(Icons.link),
+                    labelText: 'Git URL',
                     controller: _gitUrlController,
                   ),
                   const GapWidget(),
                   PrimaryTextField(
-                    labelText: 'DemoURL',
+                    prefixIcon: const Icon(Icons.link),
+                    labelText: 'Demo URL',
                     controller: _demoUrlController,
                   ),
                   const GapWidget(),
@@ -90,56 +95,62 @@ class _CreateEditProjectScreenState extends State<CreateEditProjectScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Technologies used',
-                          style: TextStyles.body1,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Technologies used',
+                            style: TextStyles.body1,
+                          ),
                         ),
                         const GapWidget(
-                          size: 10,
+                          size: -10,
                         ),
-                        TagEditor(
-                          length: technologiesUsed.length,
-                          delimiters: const [','],
-                          hasAddButton: true,
-                          textInputAction: TextInputAction.next,
-                          autofocus: false,
-                          maxLines: 1,
-                          inputDecoration: const InputDecoration(
-                            isDense: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TagEditor(
+                            length: technologiesUsed.length,
+                            delimiters: const [','],
+                            hasAddButton: true,
+                            textInputAction: TextInputAction.next,
+                            autofocus: false,
+                            maxLines: 1,
+                            inputDecoration: InputDecoration(
+                              isDense: true,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20.0),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.accent),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(20.0),
+                                ),
+                              ),
+                              labelText: 'Add technologies...',
+                              labelStyle: const TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                                fontSize: 14,
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightBlue),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
-                            ),
-                            labelText: 'Add technologies...',
-                            labelStyle: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
+                            onTagChanged: (newValue) {
+                              setState(() {
+                                technologiesUsed.add(newValue);
+                              });
+                            },
+                            tagBuilder: (context, index) {
+                              return Chip(
+                                label: Text(technologiesUsed[index]),
+                                onDeleted: () {
+                                  setState(() {
+                                    technologiesUsed.removeAt(index);
+                                  });
+                                },
+                              );
+                            },
                           ),
-                          onTagChanged: (newValue) {
-                            setState(() {
-                              technologiesUsed.add(newValue);
-                            });
-                          },
-                          tagBuilder: (context, index) {
-                            return Chip(
-                              label: Text(technologiesUsed[index]),
-                              onDeleted: () {
-                                setState(() {
-                                  technologiesUsed.removeAt(index);
-                                });
-                              },
-                            );
-                          },
                         ),
                       ],
                     ),
@@ -159,6 +170,8 @@ class _CreateEditProjectScreenState extends State<CreateEditProjectScreen> {
                           userId: widget.projectPreferences.userId,
                         );
                         context.read<ProjectCubit>().addProject(newProject);
+                        SnackBarWidget.showSnackbar(
+                            context, 'Project added successfully!');
                       } else {
                         final updatedProject = ProjectModel(
                           title: _titleController.text,
@@ -172,6 +185,8 @@ class _CreateEditProjectScreenState extends State<CreateEditProjectScreen> {
                               updatedProject,
                               widget.projectPreferences.projectModel!.id!,
                             );
+                            SnackBarWidget.showSnackbar(
+                            context, 'Project updated successfully!');
                       }
                       Navigator.of(context).pop();
                     },

@@ -29,6 +29,7 @@ class PrimaryTextField extends StatelessWidget {
       validator: validator,
       initialValue: initialValue,
       onChanged: onChanged,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,

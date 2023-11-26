@@ -1,3 +1,4 @@
+import 'package:assignment12_front_end/core/ui.dart';
 import 'package:assignment12_front_end/presentation/widgets/link_button.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class GenericDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
+          color: AppColors.textLight,
           text: cancelButtonText,
         ),
         LinkButton(

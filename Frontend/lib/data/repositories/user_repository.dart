@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:assignment12_front_end/core/api.dart';
 import 'package:assignment12_front_end/data/models/user/user_model.dart';
@@ -106,6 +107,29 @@ class UserRepository {
       return (apiResponse.data as List<dynamic>)
           .map((json) => UserModel.fromJson(json))
           .toList();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<String> uploadUserImage(File imageFile) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(
+          imageFile.path,
+        ),
+      });
+
+      Response response =
+          await _api.sendRequest.post('/images/users', data: formData);
+
+      ApiResponse apiResponse = ApiResponse.fromResponse(response);
+
+      if (!apiResponse.success) {
+        throw apiResponse.message.toString();
+      }
+
+      return apiResponse.data;
     } catch (error) {
       rethrow;
     }

@@ -7,6 +7,7 @@ import 'package:assignment12_front_end/presentation/screens/blog/create_edit_blo
 import 'package:assignment12_front_end/presentation/widgets/comment_modal.dart';
 import 'package:assignment12_front_end/presentation/widgets/gap_widget.dart';
 import 'package:assignment12_front_end/presentation/widgets/generic_dialog.dart';
+import 'package:assignment12_front_end/presentation/widgets/snackbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +66,8 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                                 BlocProvider.of<BlogCubit>(context)
                                     .deleteBlog(widget.blogModel.id!);
                                 Navigator.of(context).pop();
+                                SnackBarWidget.showSnackbar(
+                            context, 'Blog deleted successfully!');
                               },
                               confirmButtonText: 'Delete',
                               cancelButtonText: 'Cancel',
@@ -90,11 +93,16 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                         color: AppColors.accent,
                       ),
                     ),
-                    Text(
-                      '${widget.blogModel.category}',
-                      style: TextStyles.body1.copyWith(
-                        color: AppColors.textLight,
+                    Chip(
+                      label: Text(
+                        '${widget.blogModel.category}',
+                        style: TextStyles.body2.copyWith(
+                          color: AppColors.textLight,
+                        ),
                       ),
+                      shape: const StadiumBorder(),
+                      backgroundColor: const Color.fromARGB(
+                          255, 235, 202, 235), // Customize the background color
                     ),
                     const GapWidget(
                       size: -10,
@@ -118,11 +126,14 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                     ),
                     Container(
                       padding: const EdgeInsets.all(8.0),
-                      child: CachedNetworkImage(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 2,
-                        fit: BoxFit.cover,
-                        imageUrl: '${widget.blogModel.image}',
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: CachedNetworkImage(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width / 2,
+                          fit: BoxFit.cover,
+                          imageUrl: '${widget.blogModel.image}',
+                        ),
                       ),
                     ),
                     const GapWidget(),

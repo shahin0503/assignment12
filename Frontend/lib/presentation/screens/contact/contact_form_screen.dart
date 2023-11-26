@@ -5,6 +5,7 @@ import 'package:assignment12_front_end/logic/cubits/user_cubit/user_state.dart';
 import 'package:assignment12_front_end/presentation/widgets/gap_widget.dart';
 import 'package:assignment12_front_end/presentation/widgets/primary_button.dart';
 import 'package:assignment12_front_end/presentation/widgets/primary_textfield.dart';
+import 'package:assignment12_front_end/presentation/widgets/snackbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,11 +72,13 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
                   size: 30,
                 ),
                 PrimaryTextField(
+                  prefixIcon: const Icon(Icons.title),
                   labelText: 'Title',
                   controller: _titleController,
                 ),
                 const GapWidget(),
                 PrimaryTextField(
+                  prefixIcon: const Icon(Icons.description),
                   labelText: 'Description',
                   controller: _descriptionController,
                 ),
@@ -90,6 +93,8 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
                       content,
                       email!,
                     );
+                    SnackBarWidget.showSnackbar(
+                            context, 'Message send successfully!');
                     Navigator.pop(context);
                   },
                   text: 'Send',

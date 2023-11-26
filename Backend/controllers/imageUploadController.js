@@ -24,8 +24,8 @@ const imageUploadController = {
           contentType: file.mimetype,
         }
       })
-
-      return res.json({data: img[0].metadata})
+      const [url] = await img[0].getSignedUrl({ action: 'read', expires: '01-01-2100' })
+      return res.json({ success: true,data: url})
     } catch (error) {
       console.log(error)
       return res.status(500).json({success: false, message: 'Error occurred while uploading image'})   
@@ -47,7 +47,8 @@ const imageUploadController = {
           contentType: file.mimetype,
         }
       })
-      return res.json({data: img[0].metadata})
+      const [url] = await img[0].getSignedUrl({ action: 'read', expires: '01-01-2100' })
+      return res.json({ success: true,data: url})
 
     } catch (error) {
       console.log(error)
