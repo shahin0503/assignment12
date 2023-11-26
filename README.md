@@ -196,6 +196,4 @@ flutter run
 
 
 ### Video
-https://github.com/shahin0503/assignment12/assets/144336102/7bceb4c5-2d2c-4c26-8d29-2f38f8f775ca
-
-
+https://drive.google.com/file/d/1K_cXF1-2ib7dEJUKRhsaj7cWA7wyH0vS/view?usp=sharing
